@@ -1,0 +1,58 @@
+{
+  "users": {
+    "email": "string",
+    "username": "string",
+    "isOnline": "boolean",
+    "isActivated": "boolean",
+    "password": "string",
+    "verifyAt": "datetime",
+    "verifyToken": "string",
+    "tokenExpiredAt": "datetime",
+    "identity": {
+      "bio": "string",
+      "fullName": "string",
+      "picture": "string"
+    }
+  },
+  "contacts": {
+    "idUser1": "string",
+    "idUser2": "string",
+    "isBlockedUser1": "boolean",
+    "isBlockedUser2": "boolean",
+    "isAccepted": "boolean"
+  },
+  "messages": {
+    "senderId": "string",
+    "text": "string",
+    "idDiscussion": "string",
+    "createdAt": "datetime",
+    "file": {
+      "type": "string",
+      "size": "string",
+      "url": "string"
+    },
+    "signalers": ["string"],
+    "messageId": "string",
+    "updatedAt": "datetime"
+  },
+  "discussions": {
+    "type": "PRIVATE | GROUPE | DIFFUSION",
+    "participants": [
+      {
+        "user": {
+          "id": "string",
+          "isSilent": "boolean",
+          "isArchived": "boolean",
+          "isAdmin": "boolean",
+          "isDeletedAt": "datetime",
+          "hasNewNotif": "boolean"
+        }
+      }
+    ],
+    "createdAt": "datetime",
+    "createdBy": "string",
+    "name": "string",
+    "description": "string",
+    "picture": "string"
+  }
+}

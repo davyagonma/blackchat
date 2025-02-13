@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = "mongodb+srv://davy:davy@cluster0.ijwas.mongodb.net/groupe7?retryWrites=true&w=majority" // Remplacez par l'URL de connexion MongoDB
+}
+
+model User {
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  fullname     String
+  email        String      @unique
+  username     String      @unique
+  password     String
+  bio          String?
+  profilePhoto String?
+  isVerified   Boolean     @default(false)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  contacts     Contact[]   @relation("User1Contacts")
+  contactsAsUser2 Contact[] @relation("User2Contacts")
+  discussions  DiscussionParticipant[]
+  messagesSent Message[]
+}
+
+model Contact {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId1    String   @db.ObjectId
+  userId2    String   @db.ObjectId
+  isAccepted Boolean  @default(false)
+  blockedBy  String?  @db.ObjectId // ID de l'utilisateur ayant bloqué le contact
+  createdAt  DateTime @default(now())
+
+  user1 User @relation(fields: [userId1], references: [id], name:"User1Contacts")
+  user2 User @relation(fields: [userId2], references: [id], name:"User2Contacts")
+}
+
+model Discussion {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  type        String      // GROUPE, DIFFUSION ou INDIVIDUEL
+  isArchived  Boolean     @default(false)
+  isMuted     Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  messages    Message[]
+  participants DiscussionParticipant[]
+}
+
+
+model Message {
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  text         String?
+  fileUrl      String?
+  senderId     String      @db.ObjectId
+  discussionId String      @db.ObjectId
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  isReported   Int         @default(0)
+
+  sender       User        @relation(fields: [senderId], references: [id])
+  discussion   Discussion  @relation(fields: [discussionId], references: [id])
+}
+
+model DiscussionParticipant {
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String      @db.ObjectId
+  discussionId String      @db.ObjectId
+  isAdmin      Boolean     @default(false)
+
+  user         User        @relation(fields: [userId], references: [id])
+  discussion   Discussion  @relation(fields: [discussionId], references: [id])
+
+  createdAt    DateTime    @default(now())
+}
