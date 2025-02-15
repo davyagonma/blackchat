@@ -112,21 +112,21 @@ exports.listReceivedRequests = async (req, res) => {
     try {
        // Vérifier si un token est présent dans le header Authorization
        const authHeader = req.headers.authorization;
-      //  if (!authHeader || !authHeader.startsWith('Bearer')) {
-      //    return res.status(200).json({ message: "L'utilisateur n'est pas connecté." });
-      //  }
+       if (!authHeader || !authHeader.startsWith('Bearer')) {
+         return res.status(200).json({ message: "L'utilisateur n'est pas connecté." });
+       }
  
        // // Extraire le token
-      //  const token = authHeader.split(' ')[2];
-      //  if (!token || token == '' || token == null) {
-      //    return res.status(200).json({ message: "L'utilisateur n'est pas connecté." });
-      //  }
+       const token = authHeader.split(' ')[1];
+       if (!token || token == '' || token == null) {
+         return res.status(200).json({ message: "L'utilisateur n'est pas connecté." });
+       }
        // Décoder le token pour récupérer l'ID utilisateur
        const decoded = jwt.verify(token, secret); // Vérifiez si la clé secrète correspond
        const userId = decoded.id; // Supposons que le champ "userId" est dans le payload du token
   
       const requests = await Contact.find({ userId1: userId, isAccepted: false }).populate("userId2", "username");
-      // return res.status(200).json({requests: requests});
+      return res.status(200).json({requests: requests});
       //return res.status(200).json({requests: requests});
     } catch (error) {
       return res.status(500).json({ message: "Erreur lors de la récupération des demandes.", error });
