@@ -48,7 +48,7 @@ exports.sendContactRequest = async (req, res) => {
       }
 
       // // Extraire le token
-      const token = authHeader.split(' ')[2];
+      const token = authHeader.split(' ')[1];
       if (!token || token == '' || token == null) {
         return res.status(200).json({ message: "L'utilisateur n'est pas connecté." });
       }
@@ -161,7 +161,7 @@ exports.listContacts = async (req, res) => {
         isAccepted: true 
       }).populate("userId1 userId2", "username");
   
-      return res.status(200).json(contacts);
+      return res.status(200).json({contacts: contacts);
     } catch (error) {
       return res.status(500).json({ message: "Erreur lors de la récupération des contacts.", error });
     }
